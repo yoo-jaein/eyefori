@@ -1,0 +1,24 @@
+<!--학교의 목록을 검색하고 지도로 외, 내부의 위험 요소를 확인하는 페이지-->
+<%= render "header" %>
+<section class="children_search">
+    <div class="part">
+        <form class="my-2 my-lg-0" action="/children/search_result" method="get">
+          
+            <div class="">
+                <label class="label" for="exampleFormControlTextarea1">어린이집</label>
+                <input name="input_kindergarden_id" type="text" class="input" id="exampleFormControlInput1" placeholder="어린이집을 입력하세요">
+            </div>
+            </hr>
+            <div class="">
+                <label class="label"for="exampleFormControlTextarea1">이름</label>
+                <input name="input_name" type="text" class="input" id="exampleFormControlInput1" placeholder="이름을 입력하세요">
+            </div>
+            <div class="submit" style="text-align:center;">
+                <button type="submit" class=""><i class="fas fa-search"></i></button> 
+            </div>
+            
+        </form>
+        
+    </div>
+</section>
+
