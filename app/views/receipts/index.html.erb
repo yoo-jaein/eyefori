@@ -1,14 +1,14 @@
 <%= render "header" %>
 <section class="receipts">
   <div class="name">
-    <h2><i class="fas fa-cube"></i>신청현황</h2>
+    <span class="nametag"></span><span class="namespan">신청현황</span>
   </div>
   <div class="container">
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="col" style="width:10%;">#</th>
-          <th scope="col" style="width:25%;">소속 어린이집</th>
+          <!--<th scope="col" style="width:10%;"></th>-->
+          <th scope="col">소속 어린이집</th>
           <th scope="col" >아이 이름</th>
           <th scope="col" >보호자 이름</th>
           <th scope="col" >처리</th>
@@ -18,7 +18,8 @@
         
         <% @receipts.each do |r| %>  
             <tr>
-              <th scope="row"><%= r.id %></th>
+              <!--<th scope="row"></th>-->
+              <!--<#%= r.id %>-->
                 <td>ㅇㅇ유치원</td>
                 <td><%= Child.find(r.child_id).name %></td>
                 <td><%= User.find(r.applicant_id).username %></td>

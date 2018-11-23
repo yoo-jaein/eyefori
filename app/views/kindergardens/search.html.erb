@@ -1,21 +1,22 @@
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2b31b6d684d7a200e559b43ef5113ef6&libraries=services"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-
 <%= render "header" %>
-<section class="search">
-    <div class="search_map">
-        <div class="container">
-        <div id="map" style="width:100%;height:350px;"></div>
-          <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2b31b6d684d7a200e559b43ef5113ef6"></script>
-        </div>
-  	   	<p style="font-size:12px; color:#c7c7c7;"><i style="margin-right: 5px; "class="fas fa-exclamation-circle"></i>
-          지도를 마우스로 클릭하면 거리측정 그리기가 시작되고 오른쪽 마우스를 클릭하면 종료됩니다
-        </p>
-    <div>
-  
+<section class="minseok_bg">
+  <div class="minseok_map">
+    <div class="search_map_search">
+      <div id="map" style="width:100%;height:90vh;"></div>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2b31b6d684d7a200e559b43ef5113ef6"></script>
+      </div>
     </div>
-        <div class="search_map_search">
-            <!--<form name="form">-->
+  </div>
+  <div class="minseok_header">
+    <div class="header_bar">
+        <div class="container">
+          <div>
+            <div class="block-img">
+              <img src="/assets/blocks" width="30px;"></img>
+            </div>
+            <div class="minseok_search">
+              <!--<form name="form">-->
               <select id="sido" name="test" onchange="changes(this.value)">
                 <% @sidoArr.each do |s| %>
                    <option value="<%=s %>" > <%=s%> </option>
@@ -24,66 +25,75 @@
               <select id="sigu" name="test2">
                 <option>전체</option>
               </select>
-              <input id="name_input" type="text" style="background-color:white;border:1px solid #ccc;width:27%;" placeholder="어린이집 이름" name="name">
-              <input onClick="getKinder()" class"shadow-sm" style="height:42px"type="submit" value="검색">
-            <!--</form>-->
-        </div>
-      
-        <div class="search_outer shadow-sm">
-            <div class="search_outer_title shadow-sm">
-                <h4>외부<br> 정보</h4>
-            </div>
-            <div class="search_outer_checkbox ">
-                <label class="search_outer_label">
-                  <input type="checkbox" >
-                  <span onClick="getAccident()" class="search_outer_label_checkmark"></span>
-                  <img src="/assets/car-collision.svg"> 교통사고 다발구간
-                </label>
-                <label class="search_outer_label">
-                  <input type="checkbox" >
-                  <span onClick="getPub()" class="search_outer_label_checkmark"></span>
-                  <img src="/assets/map-spot_orange.svg"> 유흥 주점
-                </label>
-                <label class="search_outer_label">
-                  <input type="checkbox" >
-                  <span onClick="getSmoke()" class="search_outer_label_checkmark"></span>
-                  <img src="/assets/map-spot_purple.svg"> 흡연 구역
-                </label>
-                <label class="search_outer_label">
-                  <input type="checkbox" >
-                  <span onClick="getSchool()" class="search_outer_label_checkmark"></span>
-                  <img src="/assets/map-spot_green.svg"> 스쿨존
-                </label>
-            </div>
-        </div>
-    </div>
-    
-    <div id="lsh_list" class="search_list" id="enters">
-      <% for i in 0..4 %>
-        <div class="search_list_card">
-            <div class="search_list_card_img">
-                <div class="search_list_card_img_border">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWpFYPyGbTwHTdG7ku62LXJ0fXv_AxeydKede-DaT7o7QCi13E">
-                </div>
+              <input id="name_input" type="text"  placeholder="어린이집 이름" name="name">
+              <button onClick="getKinder()" type="submit"><i class="fas fa-search"></i></button>
+              <!--</form>-->
             </div>
             
-            <div class="search_list_card_text">
-                <h2><%= @kindergarden_all[i].crname %></h2>
-                <p>주소: <%= @kindergarden_all[i].craddr %></p> 
-                <button class="shadow-sm" onClick="gotoposi(<%=@kindergarden_all[i].id%>)"><i style="margin-right:10px"class="fas fa-map-marker-alt"></i>위치보기</button>
-                <a href="http://info.childcare.go.kr/info/pnis/search/preview/SummaryInfoSlPu.jsp?flag=YJ&STCODE_POP=<%=@kindergarden_all[i].stcode%>&CRNAMETITLE=<%=@kindergarden_all[i].crname %>" target="_blank"><button data-toggle="modal" data-target=".detail-info" class="shadow-sm"><i style="margin-right:10px;"class="fas fa-search"></i>상세보기</button></a>
+        
+            <div class="search_outer_checkbox minseok_check">
+                <label class="search_outer_label">
+                  <input type="checkbox" >사고다발
+                  <span onClick="getAccident()" class="search_outer_label_checkmark"></span>
+                </label>
+                <label class="search_outer_label">
+                  <input type="checkbox" >유흥주점
+                  <span onClick="getPub()" class="search_outer_label_checkmark"></span>
+                </label>
+                <label class="search_outer_label">
+                  <input type="checkbox" >스쿨존
+                  <span onClick="getSchool()" class="search_outer_label_checkmark"></span>
+                </label>
             </div>
+
+            
+          </div>
         </div>
-      <% end %>
     </div>
+    <div>
+      <div id="lsh_list" class="search_list" id="enters">
+        <% for i in 0..10 %>
+          <div class="search_list_card">
+            <div class="flex">
+              
+              <div class="search_list_card_text">
+                  <div class="img">
+                    <img src="/assets/baby.png" width="50px"></img>
+                  </div>
+                  
+                  <div class="text">
+                    <h2><%= @kindergarden_all[i].crname %></h2>
+                    <p><%= @kindergarden_all[i].craddr %></p> 
+                  </div>
+                  <div>
+                    <div class="button">
+                      <button onClick="gotoposi(<%=@kindergarden_all[i].id%>)"><img src="/assets/map.png" width="30px"></img></button>
+                      <a href="http://info.childcare.go.kr/info/pnis/search/preview/SummaryInfoSlPu.jsp?flag=YJ&STCODE_POP=<%=@kindergarden_all[i].stcode%>&CRNAMETITLE=<%=@kindergarden_all[i].crname %>" target="_blank"><button data-toggle="modal" data-target=".detail-info" ><img src="/assets/i.png" width="30px"></img></button></a>
+                    </div>
+                    <div class="button">
+                      <button onClick="getAccident(<%=@kindergarden_all[i].id%>)"><i class="fas fa-car-crash"></i></button>
+                      <button onClick="getPub(<%=@kindergarden_all[i].id%>)"><i class="fas fa-beer"></i></button>
+                      <button onClick="getSchool(<%=@kindergarden_all[i].id%>)"><i class="fas fa-school"></i></button>
+                    </div>
+                  </div>
+                  
+                  
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </section>
 
+
 <script>
-  if (self.name != 'reload') {
-     self.name = 'reload';
-     self.location.reload(true);
-   }
-   else self.name = ''; 
+  // if (self.name != 'reload') {
+  //   self.name = 'reload';
+  //   self.location.reload(true);
+  // }
+  // else self.name = ''; 
 
   //지도 생성
   var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
@@ -98,9 +108,15 @@
   var marker_idx = -1;
   
 // 어린이집 목록 무한 스크롤
+  var i = 0;
   var index = 5;
-  $(window).scroll(function () { 
-      if ($(window).scrollTop() >= $(document).height() - $(window).height() - 0.5) { 
+  $("#lsh_list").scroll(function () {
+    // console.log(1);
+    //console.log(" scrollTop: "+$("#lsh_list").scrollTop()+" lsh_list height: "+$("#lsh_list").height()+" window height: "+ $(window).height());
+    // console.log(" scrollTop: "+$("#lsh_list").scrollTop()+" lsh_list - window: "+($("#lsh_list").height() - $(window).height()));
+      if ($("#lsh_list").scrollTop() >= $("#lsh_list").height() - $(window).height() + 1210 + i*420) { 
+        i += 1;
+        // console.log("infi");
         $.ajax({
           type: "GET",
           url: "/kindergardens/infiscroll",
@@ -109,10 +125,11 @@
           },
           dataType: "json",
           success: function(e){
+            // console.log("infi");
             // for(i=index;i<index+3;i++){
             for(var key in e["kind"]){
               // console.log(e["kind"][key].crname)
-              $(".search_list").append("<div class=\"search_list_card\"><div class=\"search_list_card_img\"><div class=\"search_list_card_img_border\"><img src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWpFYPyGbTwHTdG7ku62LXJ0fXv_AxeydKede-DaT7o7QCi13E\"></div></div><div class=\"search_list_card_text\"><h2>"+e["kind"][key].crname+"</h2><p>주소:"+e["kind"][key].craddr+"</p><button class=\"shadow-sm\" onClick=\"gotoposi("+e["kind"][key].crname.id+")\"><i style=\"margin-right:10px\"class=\"fas fa-map-marker-alt\"></i>위치보기</button><button data-toggle=\"modal\" data-target=\".detail-info\" class=\"shadow-sm\"><i style=\"margin-right:10px;\"class=\"fas fa-search\"></i>상세보기</button></div></div>");
+              $("#lsh_list").append("<div class=\"search_list_card\"><div class=\"search_list_card_text\"><h2>"+e["kind"][key].crname+"</h2><p>주소:"+e["kind"][key].craddr+"</p><button class=\"shadow-sm\" onClick=\"gotoposi("+e["kind"][key].id+")\"><i style=\"margin-right:10px\"class=\"fas fa-map-marker-alt\"></i>위치보기</button><button data-toggle=\"modal\" data-target=\".detail-info\" class=\"shadow-sm\"><i style=\"margin-right:10px;\"class=\"fas fa-search\"></i>상세보기</button></div></div>");
             }
             index += 3;
           },
@@ -123,14 +140,13 @@
       } 
   });
   
-  
   //search
   function getKinder(){
     var sido = $('#sido').val();
     var sigu = $('#sigu').val();
     var crname = $('#name_input').val();
     $.ajax({
-      type: "GET",
+      type: "POST",
       url: "/kindergardens/getKinder",
       data:{
         'sido': sido,
@@ -145,7 +161,7 @@
         }
         for(var key in e["kind"]){
               // console.log(e["kind"][key].crname)
-              $(".search_list").append("<div class=\"search_list_card\"><div class=\"search_list_card_img\"><div class=\"search_list_card_img_border\"><img src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWpFYPyGbTwHTdG7ku62LXJ0fXv_AxeydKede-DaT7o7QCi13E\"></div></div><div class=\"search_list_card_text\"><h2>"+e["kind"][key].crname+"</h2><p>주소:"+e["kind"][key].craddr+"</p><button class=\"shadow-sm\" onClick=\"gotoposi("+e["kind"][key].id+")\"><i style=\"margin-right:10px\"class=\"fas fa-map-marker-alt\"></i>위치보기</button><button data-toggle=\"modal\" data-target=\".detail-info\" class=\"shadow-sm\"><i style=\"margin-right:10px;\"class=\"fas fa-search\"></i>상세보기</button></div></div>");
+              $(".search_list").append("<div class=\"search_list_card\"><div class=\"search_list_card_text\"><h2>"+e["kind"][key].crname+"</h2><p>주소:"+e["kind"][key].craddr+"</p><button class=\"shadow-sm\" onClick=\"gotoposi("+e["kind"][key].id+")\"><i style=\"margin-right:10px\"class=\"fas fa-map-marker-alt\"></i>위치보기</button><button data-toggle=\"modal\" data-target=\".detail-info\" class=\"shadow-sm\"><i style=\"margin-right:10px;\"class=\"fas fa-search\"></i>상세보기</button></div></div>");
             }
       },
       error: function(xhr, status ,error){
@@ -168,7 +184,10 @@
       }
     });
   }
-  function setCenter(posi) {            
+  function setCenter(posi) {
+    var pub_imageSrc = "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+    var pub_imageSize = new daum.maps.Size(24, 35); 
+    var markerImage = new daum.maps.MarkerImage(pub_imageSrc, pub_imageSize);
     // 이동할 위도 경도 위치를 생성합니다 
     var moveLatLon = new daum.maps.LatLng(posi.x, posi.y);
     
@@ -176,7 +195,8 @@
     map.setCenter(moveLatLon);
     var marker = new daum.maps.Marker({
         map: map,
-        position: moveLatLon
+        position: moveLatLon,
+        image : markerImage
     });
     if (marker_idx != -1){
       markers[marker_idx].setMap(null);  
@@ -185,96 +205,121 @@
     marker_idx = posi.kin.id;
   }
 
-  var dangers = new Array();
-  var danger_on = 0;
-  // 마커 이미지의 이미지 주소입니다
-  
-  function getPub(){
-    var imageSrc = "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-    var imageSize = new daum.maps.Size(24, 35); 
-    var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
-    $.ajax({
-      type: "GET",
-      url: "/kindergardens/getPub",
-      dataType: "json",
-      success: function(e){
-        if(danger_on == 0){
-          for(var i=0;i<20;i++){
-            var geocoder = new daum.maps.services.Geocoder();
-            // 주소로 좌표를 검색합니다
-            geocoder.addressSearch(e.pub[i].address, function(result, status) {
-                // 정상적으로 검색이 완료됐으면 
-                 if (status === daum.maps.services.Status.OK) {
-                    
-                    var coords = new daum.maps.LatLng(result[0].y, result[0].x);
-
-                    // 결과값으로 받은 위치를 마커로 표시합니다
-                    var marker = new daum.maps.Marker({
-                        map: map,
-                        position: coords,
-                        image : markerImage
-                    });
-                    dangers[i] = marker;
-                } 
+  var dangers = [];
+  function getPub(_id){
+    var pub_imageSrc = "/drink.png";
+    var pub_imageSize = new daum.maps.Size(24, 35); 
+    var markerImage = new daum.maps.MarkerImage(pub_imageSrc, pub_imageSize);
+    if(dangers.length == 0){
+      $.ajax({
+        type: "GET",
+        url: "/kindergardens/getPub/"+_id,
+        dataType: "json",
+        success: function(e){
+          //alert(dangers.length);
+          for(var i=0;i<e.pub.length;i++){
+            console.log(e.pub[i].adrress);
+            // console.log(e.pub[i].x + " " + e.pub[i].y);
+            // console.log(e.pub[i].name);
+            var coords = new daum.maps.LatLng(e.pub[i].x, e.pub[i].y);
+            
+            var marker = new daum.maps.Marker({
+                map: map,
+                position: coords,
+                image : markerImage
             });
+            dangers.push(marker);
           }
-          danger_on = 1;
+        },
+        error: function(xhr, status ,error){
+          alert(error);
         }
-        else {
-          danger_on = 0;
-          // console.log(dangers[i]);
-          // for(var i=0;i<20;i++){
-          //   dangers[i].setMap(null);
-          // }
-        }
-      },
-      error: function(xhr, status ,error){
-        alert(error);
+      });
+    }
+    else{
+      for(var i=0;i<dangers.length;i++){
+        dangers[i].setMap(null);
       }
-    });
+      dangers = [];
+    }
   }
   
-  
-  var accis = new Array();
-  var acci_on = 0
-  function getAccident(){
-    var imageSrc = "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png";
-    var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
-    var imageSize = new daum.maps.Size(24, 35);
-    alert(1111);
-    $.ajax({
-      type: "GET",
-      url: "/kindergardens/getAccident",
-      dataType: "json",
-      success: function(e){
-        console.log(e.acc[i].y);
-        if(acci_on == 0){
-          for(var i=0;i<20;i++){
-            console.log(e.acci[i].y, e.acci[i].x);
-              var coords = new daum.maps.LatLng(e.acci[i].y, e.acci[i].x);
-               
-              // 결과값으로 받은 위치를 마커로 표시합니다
-              var marker = new daum.maps.Marker({
-                  map: map,
-                  position: coords,
-                  image : markerImage
-              });
-              accis[i] = marker;
+  var accis = [];
+  function getAccident(_id){
+    var acci_imageSrc = "/warning1.png";
+    var acci_imageSize = new daum.maps.Size(24, 35);
+    var markerImage = new daum.maps.MarkerImage(acci_imageSrc, acci_imageSize);
+    //alert(1111);
+    if(accis.length == 0){
+      $.ajax({
+        type: "GET",
+        url: "/kindergardens/getAccident/"+_id,
+        dataType: "json",
+        success: function(e){
+          //console.log(e.acci[1].y_crd);
+          //alert(1111);
+          for(var i=0;i<e.acci.length;i++){
+            var coords = new daum.maps.LatLng(e.acci[i].y_crd, e.acci[i].x_crd);
+             
+            // 결과값으로 받은 위치를 마커로 표시합니다
+            var marker = new daum.maps.Marker({
+                map: map,
+                position: coords,
+                image : markerImage
+            });
+            accis.push(marker);
           }
-          acci_on = 1;
+        },
+        error: function(xhr, status ,error){
+          alert(error);
         }
-        else {
-          acci_on = 0;
-          // console.log(dangers[i]);
-          // for(var i=0;i<20;i++){
-          //   dangers[i].setMap(null);
-          // }
-        }
-      },
-      error: function(xhr, status ,error){
-        alert(error);
+      });
+    }
+    else{
+     for(var i=0;i<accis.length;i++){
+        accis[i].setMap(null);
       }
-    });
+      accis = [];
+    }
+  }
+  
+  var szs = [];
+  function getSchool(_id){
+    var sz_imageSrc = "/school.png";
+    var sz_imageSize = new daum.maps.Size(24, 35);
+    var markerImage = new daum.maps.MarkerImage(sz_imageSrc, sz_imageSize);
+    //alert(1111);
+    if(szs.length == 0){
+      $.ajax({
+        type: "GET",
+        url: "/kindergardens/getSchool/"+_id,
+        dataType: "json",
+        success: function(e){
+          //console.log(e.acci[1].y_crd);
+          //alert(1111);
+          for(var i=0;i<e.sz.length;i++){
+            var coords = new daum.maps.LatLng(e.sz[i].y_crd, e.sz[i].x_crd);
+             
+            // 결과값으로 받은 위치를 마커로 표시합니다
+            var marker = new daum.maps.Marker({
+                map: map,
+                position: coords,
+                image : markerImage
+            });
+            szs.push(marker);
+          }
+        },
+        error: function(xhr, status ,error){
+          alert(error);
+        }
+      });
+    }
+    else{
+     for(var i=0;i<szs.length;i++){
+        szs[i].setMap(null);
+      }
+      szs = [];
+    }
   }
   
   //지도에 선 그리기
@@ -629,6 +674,14 @@
     sigun.options[i] = null;
   }
   
+  if (fr == "제주도"){
+    for(i=0; i<100;i++){
+      sigun.options[i] = null;
+    }
+    for(i=0; i<100;i++){
+      sigun.options[i] = null;
+    }
+  }
   //   포문을 이용하여 두번째(test2)셀렉트 박스에 값을 뿌려줍니당)
   for(i=0;i < num.length;i++) {
     sigun.options[i] = new Option(num[i],vnum[i]);

@@ -18,6 +18,11 @@ class KakaosController < ApplicationController
   end
 
   def message
+    
+    require 'nokogiri'
+    require 'open-uri'
+    require 'mechanize'
+    
     @result = params[:content]
     @user_key = params[:user_key]
     @kakao = Kakao.find_by_user_key(@user_key) #현재 유저키로 카카오 Model 정보 가져오기
@@ -373,7 +378,7 @@ class KakaosController < ApplicationController
         message: {text: "#{@result} 어린이의 어떤 정보를 보시겠습니까?"},
         keyboard: {
                     type: "buttons",
-                    buttons: ["기본 정보보기", "버스 승하차 정보보기","식중독 위험 정보보기", "그만하기"]
+                    buttons: ["기본 정보보기", "버스 승하차 정보보기","식중독 위험 정보보기","미세먼지 정보보기", "그만하기"]
                    }
               }
               render json: @msg, status: :ok
@@ -394,7 +399,7 @@ class KakaosController < ApplicationController
         message: {text: "#{@child.name} 어린이의 기본 정보\n소속 : #{@kindergarden.crname}\n나이 : #{@child.age}\n성별 : #{@child.gender}자\n담당교사 : #{User.find(@child.teacher_id).username}\n학부모 : #{User.find(@child.parent_id).username}"},
         keyboard: {
                     type: "buttons",
-                    buttons: ["기본 정보보기", "버스 승하차 정보보기", "식중독 위험 정보보기", "그만하기"]
+                    buttons: ["기본 정보보기", "버스 승하차 정보보기", "식중독 위험 정보보기","미세먼지 정보보기", "그만하기"]
                    }
               }
               render json: @msg, status: :ok
@@ -412,7 +417,7 @@ class KakaosController < ApplicationController
             message: {text: "#{@child.name} 어린이의 버스 승하차 정보\n#{@childbus[0].created_at}에 #{@childbus[0].boarding}하였습니다\n#{@childbus[1].created_at}에 #{@childbus[1].boarding}하였습니다"},
             keyboard: {
                         type: "buttons",
-                        buttons: ["기본 정보보기", "버스 승하차 정보보기", "식중독 위험 정보보기", "그만하기"]
+                        buttons: ["기본 정보보기", "버스 승하차 정보보기", "식중독 위험 정보보기", "미세먼지 정보보기", "그만하기"]
                        }
                   }
                   render json: @msg, status: :ok
@@ -426,7 +431,7 @@ class KakaosController < ApplicationController
             message: {text: "#{@child.name} 어린이의 버스 승하차 정보\n#{childbus[0].created_at}에 #{childbus[0].boarding}하였습니다"},
             keyboard: {
                         type: "buttons",
-                        buttons: ["기본 정보보기", "버스 승하차 정보보기","식중독 위험 정보보기", "그만하기"]
+                        buttons: ["기본 정보보기", "버스 승하차 정보보기","식중독 위험 정보보기","미세먼지 정보보기", "그만하기"]
                        }
                   }
                   render json: @msg, status: :ok
@@ -438,7 +443,7 @@ class KakaosController < ApplicationController
             message: {text: "#{@child.name} 어린이의 버스 승하차 정보\n최근 알림이 없습니다. "},
             keyboard: {
                         type: "buttons",
-                        buttons: ["기본 정보보기", "버스 승하차 정보보기", "식중독 위험 정보보기", "그만하기"]
+                        buttons: ["기본 정보보기", "버스 승하차 정보보기", "식중독 위험 정보보기","미세먼지 정보보기", "그만하기"]
                        }
                   }
                   render json: @msg, status: :ok
@@ -449,59 +454,116 @@ class KakaosController < ApplicationController
       # 식중독알리미 
      elsif @result == "식중독 위험 정보보기"
           totalCount = "75"
-    
-    url = "http://apis.data.go.kr/B550928/dissForecastInfoSvc/getDissForecastInfo?serviceKey=aAkkQBvnhPvUEXEGqcHEPZYWN8h%2FLqcMChpZFlMdeOtp6jaYY9WdrxfvGAsPNr%2BYrFO0GdlY1GKLVMNKX%2FeHlw%3D%3D&numOfRows=" + totalCount + "&pageNo=1&type=xml&dissCd=3&znCd=11"
-    doc = Nokogiri::XML(open(url))
-    
-    # puts totalCount
-    
-    item = doc.xpath("//item")
-    totalCount = item.xpath("//totalCount").inner_text
-    
-    cnt = 0
-    
-    (0..totalCount.to_i-1).each do |i|
-        # 서울광역시 종로구 파싱
-        if item.xpath("//lowrnkZnCd")[i].inner_text == "11110"
-            risk = item.xpath("//risk")[i].inner_text.to_i
-    
-            if risk == 1
-              risk_text = "관심"
-            elsif risk == 2
-              risk_text = "주의"
-            elsif risk == 3
-              risk_text = "경고"
-            elsif risk == 4
-              risk_text = "위험"
-            end
-            
-            cnt = cnt+1
-            
-            if cnt == 1
-                # 오늘
-                @result_1 = risk_text
-            elsif cnt == 2
-                # 내일
-                @result_2 = risk_text
-            elsif cnt == 3
-                # 모레
-                @result_3 = risk_text
-            end
-        end
-    end
+          url = "http://apis.data.go.kr/B550928/dissForecastInfoSvc/getDissForecastInfo?serviceKey=aAkkQBvnhPvUEXEGqcHEPZYWN8h%2FLqcMChpZFlMdeOtp6jaYY9WdrxfvGAsPNr%2BYrFO0GdlY1GKLVMNKX%2FeHlw%3D%3D&numOfRows=" + totalCount + "&pageNo=1&type=xml&dissCd=3&znCd=11"
+          doc = Nokogiri::XML(open(url))
+          
+          # puts totalCount
+          
+          item = doc.xpath("//item")
+          totalCount = item.xpath("//totalCount").inner_text
+          
+          cnt = 0
+          
+          (0..totalCount.to_i-1).each do |i|
+              # 서울광역시 종로구 파싱
+              if item.xpath("//lowrnkZnCd")[i].inner_text == "11110"
+                  risk = item.xpath("//risk")[i].inner_text.to_i
+          
+                  if risk == 1
+                    risk_text = "관심"
+                  elsif risk == 2
+                    risk_text = "주의"
+                  elsif risk == 3
+                    risk_text = "경고"
+                  elsif risk == 4
+                    risk_text = "위험"
+                  end
+                  
+                  cnt = cnt+1
+                  
+                  if cnt == 1
+                      # 오늘
+                      @result_1 = risk_text
+                  elsif cnt == 2
+                      # 내일
+                      @result_2 = risk_text
+                  elsif cnt == 3
+                      # 모레
+                      @result_3 = risk_text
+                  end
+              end
+          end
     
       @msg = {
-        message: {text: "식중독 위험정보 보기\n(관심<주의<위험<경고)\n오늘 : #{@result_1}\n내일 : #{@result_2}\n모레 : #{@result_3}"},
+        message: {text: "식중독 위험정보 보기\n오늘 : #{@result_1}\n내일 : #{@result_2}\n모레 : #{@result_3}\n(관심<주의<위험<경고)"},
         keyboard: {
                     type: "buttons",
-                    buttons: ["기본 정보보기", "버스 승하차 정보보기", "식중독 위험 정보보기", "그만하기"]
+                    buttons: ["기본 정보보기", "버스 승하차 정보보기", "식중독 위험 정보보기","미세먼지 정보보기", "그만하기"]
                    }
               }
               render json: @msg, status: :ok
               @kakao.lastQuestion = "childOption"
               @kakao.save
-      end
+     # end
       
+    # 미세먼지 알리미 
+    elsif @result == "미세먼지 정보보기"
+        # 미세먼지 현황 파악
+        agent = Mechanize.new
+        pageDust = agent.get("https://search.daum.net/search?w=tot&DA=YZR&t__nil_searchbox=btn&sug=&sugo=&q=%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80")        #대입
+        todaydust1 = pageDust.search("#airPollutionNColl > div.coll_cont > div > div.wrap_whole > div.cont_map.bg_map > div.map_region > ul > li.city_01 > a > span > span.txt_state").text.to_i
+        
+        # 좋음
+        if todaydust1>0 && todaydust1<-30 
+          @todayDust1 = "좋음"  
+        
+        # 보통
+        elsif todaydust1<=80
+          @todayDust1 = "보통"
+        
+        # 나쁨
+        elsif todaydust1<=150
+          @todayDust1 = "나쁨"
+          
+        # 매우 나쁨
+        else
+          @todayDust1 = "매우나쁨"
+        end
+      
+        # 초미세먼지 현황 파악
+        agent = Mechanize.new
+        pageDust2 = agent.get("https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80")        #대입
+        todaydust2 = pageDust2.search("#airPollutionNColl > div.coll_cont > div > div.wrap_whole > div.cont_map.bg_map > div.map_region > ul > li.city_01 > a > span > span.txt_state").text.to_i
+        
+        # 좋음
+        if todaydust2 >0 && todaydust2<=15 
+          @todayDust2 = "좋음"  
+        
+        # 보통
+        elsif todaydust2<=35
+          @todayDust2 = "보통"
+        
+        # 나쁨
+        elsif todaydust2<=75
+          @todayDust2 = "나쁨"
+          
+        # 매우 나쁨
+        else
+          @todayDust2 = "매우나쁨"
+        end
+    
+      @msg = {
+        message: {text: "미세먼지 정보보기\n#{@kindergarden.sidoname}\n미세먼지 : #{@todayDust1}\n초미세먼지 : #{@todayDust2}\n(좋음<보통<나쁨<매우나쁨)"},
+        keyboard: {
+                    type: "buttons",
+                    buttons: ["기본 정보보기", "버스 승하차 정보보기", "식중독 위험 정보보기", "미세먼지 정보보기","그만하기"]
+                  }
+              }
+              render json: @msg, status: :ok
+              @kakao.lastQuestion = "childOption"
+              @kakao.save
+      end
+        
     # 기능 2 ---------------------------------------------------------------------------끝
     # 그만하기
     elsif @result.include? "그만"

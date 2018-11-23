@@ -42,7 +42,8 @@ class ChildrenController < ApplicationController
       @child = @children[id]
       cbs = Childbus.where("child_id like ?", @child.id).order("created_at DESC")
       @childbus = cbs
-      
+    
+    require 'rubygems'
     require 'nokogiri'
     require 'open-uri'
     
@@ -311,6 +312,52 @@ class ChildrenController < ApplicationController
       @noriter_inspection_date = search[15].text               #안전 검사 일자
       @noriter_inspection_result = search[16].text             #안전 검사 결과
     end
+    
+    
+    # 미세먼지 현황 파악
+    agent = Mechanize.new
+    pageDust = agent.get("https://search.daum.net/search?w=tot&DA=YZR&t__nil_searchbox=btn&sug=&sugo=&q=%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80")        #대입
+    todaydust1 = pageDust.search("#airPollutionNColl > div.coll_cont > div > div.wrap_whole > div.cont_map.bg_map > div.map_region > ul > li.city_01 > a > span > span.txt_state").text.to_i
+    
+    # 좋음
+    if todaydust1>0 && todaydust1<-30 
+      @todayDust1 = "좋음"  
+    
+    # 보통
+    elsif todaydust1<=80
+      @todayDust1 = "보통"
+    
+    # 나쁨
+    elsif todaydust1<=150
+      @todayDust1 = "나쁨"
+      
+    # 매우 나쁨
+    else
+      @todayDust1 = "매우나쁨"
+    end
+  
+    # 초미세먼지 현황 파악
+    agent = Mechanize.new
+    pageDust2 = agent.get("https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80")        #대입
+    todaydust2 = pageDust2.search("#airPollutionNColl > div.coll_cont > div > div.wrap_whole > div.cont_map.bg_map > div.map_region > ul > li.city_01 > a > span > span.txt_state").text.to_i
+    
+    # 좋음
+    if todaydust2 >0 && todaydust2<=15 
+      @todayDust2 = "좋음"  
+    
+    # 보통
+    elsif todaydust2<=35
+      @todayDust2 = "보통"
+    
+    # 나쁨
+    elsif todaydust2<=75
+      @todayDust2 = "나쁨"
+      
+    # 매우 나쁨
+    else
+      @todayDust2 = "매우나쁨"
+    end
+    
   end
   
   def index
@@ -596,6 +643,49 @@ class ChildrenController < ApplicationController
                 @result_3 = risk_text
             end
         end
+    end
+    # 미세먼지 현황 파악
+    agent = Mechanize.new
+    pageDust = agent.get("https://search.daum.net/search?w=tot&DA=YZR&t__nil_searchbox=btn&sug=&sugo=&q=%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80")        #대입
+    todaydust1 = pageDust.search("#airPollutionNColl > div.coll_cont > div > div.wrap_whole > div.cont_map.bg_map > div.map_region > ul > li.city_01 > a > span > span.txt_state").text.to_i
+    
+    # 좋음
+    if todaydust1>0 && todaydust1<-30 
+      @todayDust1 = "좋음"  
+    
+    # 보통
+    elsif todaydust1<=80
+      @todayDust1 = "보통"
+    
+    # 나쁨
+    elsif todaydust1<=150
+      @todayDust1 = "나쁨"
+      
+    # 매우 나쁨
+    else
+      @todayDust1 = "매우나쁨"
+    end
+  
+    # 초미세먼지 현황 파악
+    agent = Mechanize.new
+    pageDust2 = agent.get("https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80")        #대입
+    todaydust2 = pageDust2.search("#airPollutionNColl > div.coll_cont > div > div.wrap_whole > div.cont_map.bg_map > div.map_region > ul > li.city_01 > a > span > span.txt_state").text.to_i
+    
+    # 좋음
+    if todaydust2 >0 && todaydust2<=15 
+      @todayDust2 = "좋음"  
+    
+    # 보통
+    elsif todaydust2<=35
+      @todayDust2 = "보통"
+    
+    # 나쁨
+    elsif todaydust2<=75
+      @todayDust2 = "나쁨"
+      
+    # 매우 나쁨
+    else
+      @todayDust2 = "매우나쁨"
     end
     
   end

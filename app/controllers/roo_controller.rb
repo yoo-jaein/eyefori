@@ -28,7 +28,6 @@ class RooController < ApplicationController
             @danger.y = res.y
             @danger.save
         end
-        
     end
 end
 

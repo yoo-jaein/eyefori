@@ -1,4 +1,5 @@
 <%= render "header" %>
+
 <div class="modal fade" id="search_school_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -40,30 +41,21 @@
   </div>
 </div>
 
-<section class="signup">
-  <div class="container">
-    <div class="signup-part">
+<section class="login">
+  <div class="login_container">
+    <div class="login-part">
       <div class="title">
         <h2>회원가입</h2>
       </div>
       
       <div class="content">
         <div style="display:flex; align-items:center; margin-bottom: 20px;">
-          <div class="field">
-            <input style="border:1px solid #c7c7c7; border-radius:5px;"type="text" name="kindergarden_id" value="    어린이집" readonly>
-          </div>
-          <button class="search_school" data-toggle="modal" data-target="#search_school_modal" >
-            <p style="margin-bottom:0;">
-              <i class="fas fa-search"></i>
-            </p>
-          </button>
         </div>
-        
-
         
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
           <%= devise_error_messages! %>
-          <%#= f.text_field :kindergarden_id , class: 'my-input'%>
+          
+          
           <p> 회원 타입 
             &nbsp&nbsp&nbsp&nbsp<%= f.radio_button :usertype, 'parent', checked: true %>
             <label class="radio_button">학부모 &nbsp
@@ -72,29 +64,45 @@
             <label class="radio_button">선생님
           </label>
           </p>
-  
-         
+        <% end %>
           
-          <!--<p> 성별 -->
-          <!--  &nbsp&nbsp&nbsp<%#= f.radio_button :gender, '남자', checked: true %>-->
-          <!--  <label class="radio_button">남자-->
-          <!--</label>-->
-          <!--  &nbsp&nbsp<%#= f.radio_button :gender, '여자' %>-->
-          <!--  <label class="radio_button">여자-->
-          <!--</label>-->
-          <!--</p>-->
+          
+          어린이집&nbsp&nbsp&nbsp&nbsp탐색하기
+          <button class="search_school" data-toggle="modal" data-target="#search_school_modal" >
+            <p style="margin-bottom:0;">
+               <i class="fas fa-search"></i>
+            </p>
+          </button>
+  
+  
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+          <%= devise_error_messages! %>
+          
+         <p>어린이집  
+            &nbsp&nbsp&nbsp&nbsp<%= f.text_field :kindergarden , class: 'my-input', placeholder: "선생님만 입력(상단돋보기 클릭)", readonly: true%>
+            <%= f.hidden_field :kindergarden_id, class: 'signup_my-input' %>
         
-          <div class="field">
+          
+          <p> 성별 
+            &nbsp&nbsp&nbsp<%= f.radio_button :gender, '남자', checked: true %>
+            <label class="radio_button">남자
+            </label>
+              &nbsp&nbsp<%= f.radio_button :gender, '여자' %>
+              <label class="radio_button">여자
+            </label>
+          </p>
+        
+          <div class="signup_field">
             <%= f.label :이름 %><br />
             <%= f.text_field :username , autofocus: true , class: 'my-input' %>
           </div>
       
-          <div class="field">
+          <div class="signup_field">
             <%= f.label :이메일 %><br />
             <%= f.email_field :email, autocomplete: "email" , class: 'my-input' %>
           </div>
       
-          <div class="field">
+          <div class="signup_field">
             <%= f.label :비밀번호 %>
             <% if @minimum_password_length %>
             (<%= @minimum_password_length %>자 이상)
@@ -102,35 +110,104 @@
             <%= f.password_field :password, autocomplete: "new-password" , class: 'my-input' %>
           </div>
       
-          <div class="field">
+          <div class="signup_field">
             <%= f.label :비밀번호확인 %><br />
             <%= f.password_field :password_confirmation, autocomplete: "new-password" , class: 'my-input'%>
           </div>
       
           
           
-          <div class="field">
+          <div class="signup_field">
             <%= f.label :나이 %><br />
             <%= f.number_field :age , class: 'my-input' %>
           </div>
-      
 
           
-          <div class="field">
+          <div class="signup_field">
             <%= f.label :전화번호 %><br />
             <%= f.text_field :telephone , class: 'my-input' %>
           </div>
           
-          <div class="actions">
-            <%= f.submit "회원가입" , class: 'my-btn' %>
+          <div class="signup_actions">
+            <%= f.submit "회원가입" , class: 'signup-my-btn' %>
+            <button class='signup-my-btn'>로그인</button>
           </div>
         <% end %>
       
-        <%= render "users/shared/links" %>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  function getKinder(){
+    var sido = $('#sido').val();
+    var sigu = $('#sigu').val();
+    var crname = $('#name_input').val();
+    $.ajax({
+      type: "POST",
+      url: "/kindergardens/getKinder",
+      data:{
+        'sido': sido,
+        'sigu': sigu,
+        'crname': crname
+      },
+      dataType: "json",
+      success: function(e){
+        // console.log(e.kinder[i].id);
+        // console.log(e.kinder[i].crname);
+        var list = document.getElementsByClassName("output")[0];
+
+        // As long as <ul> has a child node, remove it
+        while (list.hasChildNodes()) {   
+            list.removeChild(list.firstChild);
+        }
+        $('.output').append("<ul>");
+        for(var key in e["kind"]){
+          //console.log(e["kind"][key].id);
+          $('.output').append("<li id=\"kinder_lili\"onClick=\"goto_form("+e["kind"][key].id+")\" class=\"kinder_li\">"+ e["kind"][key].crname +"  "+ e["kind"][key].craddr+"</li>");
+        }
+        $('.output').append("</ul>");
+        // $('.kinder_li').click(function() {
+        //   $('#search_school_modal').hide;
+        // });
+      },
+      error: function(xhr, status ,error){
+        alert(error);
+      }
+    });
+  }
+  function goto_form(_value){
+    $.ajax({
+      type: "GET",
+      url: "/kindergardens/gotoform/"+_value,
+      dataType: "json",
+      success: function(e){
+        // document.getElementById("kinder_lili").click(function() {
+        //   document.getElementById("search_school_modal").modal("hide");
+        // });
+        
+        //console.log(typeof(e.id));
+        // $('#user_kindergarden_id').setAttribute('value', e.id );
+        // $('#user_kindergarden_id').value = e.id;
+        document.getElementById("user_kindergarden").value = "";
+        document.getElementById("user_kindergarden_id").value = "";
+        document.getElementById("user_kindergarden").value = e.name;
+        document.getElementById("user_kindergarden_id").value = e.id;
+      },
+      error: function(xhr, status ,error){
+        alert(error);
+      }
+    });
+  }
+</script>
+
+<style>
+  .kinder_li:hover{
+    text-decoration:underline; 
+    color:#FF0000;
+  }
+</style>
 
 <script type="text/javascript">
   function changes(fr) {
@@ -220,55 +297,3 @@
   }
 }
 </script>
-
-<script>
-  function getKinder(){
-    var sido = $('#sido').val();
-    var sigu = $('#sigu').val();
-    var crname = $('#name_input').val();
-    $.ajax({
-      type: "GET",
-      url: "/kindergardens/getKinder",
-      data:{
-        'sido': sido,
-        'sigu': sigu,
-        'crname': crname
-      },
-      dataType: "json",
-      success: function(e){
-        // console.log(e.kinder[i].id);
-        // console.log(e.kinder[i].crname);
-
-        $('.output').append("<ul>");
-        for(var i = 0;  e.kinder.length;i++){
-          $('.output').append("<li onClick=\"goto_form("+e.kinder[i].id+")\" class=\"kinder_li\">"+ e.kinder[i].crname +"</li>");
-        }
-        $('.output').append("</ul>");
-      },
-      error: function(xhr, status ,error){
-        alert(error);
-      }
-    });
-  }
-  function goto_form(_value){
-    $.ajax({
-      type: "GET",
-      url: "/kindergardens/gotoform/"+_value,
-      dataType: "json",
-      success: function(e){
-        // $('#user_kindergarden_id').setAttribute('value', e.id );
-        $('#user_kindergarden_id').value = e.id;
-      },
-      error: function(xhr, status ,error){
-        alert(error);
-      }
-    });
-  }
-</script>
-
-<style>
-  .kinder_li:hover{
-    text-decoration:underline; 
-    color:#FF0000;
-  }
-</style>

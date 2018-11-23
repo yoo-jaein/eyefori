@@ -63,6 +63,7 @@
           </div>
           </div>
         </div>
+        
         <div class="inbody">
           <h2 style="padding-bottom:10px; margin-top:10px; display:inline-block;padding-right:50px; border-bottom:1px solid #c7c7c7;"><i class="fas fa-child"></i>기본 현황</h2>
           <table>
@@ -379,6 +380,8 @@
     </div>
   </div>
 </div>
+
+
 <section class="side">
   <div class="container">
     <div class="sidebar">
@@ -391,6 +394,7 @@
     </div>
   </div>
 </section>
+
 <section class="show">
   <div class="container">
     <div class="intro_1 shadow-sm">
@@ -403,6 +407,7 @@
               <%= image_tag @child.image %>
             <% end %>
       </div>
+      
       <div class="content">
         <div class="text">
           <div>
@@ -670,5 +675,26 @@
       
       
     </div>
+     <div class="bus">
+      <div class="title shadow-sm">
+        <h2>미세먼지 알리미</h2>
+      </div>
+      
+       <div class="bus_1 shadow-sm">
+          
+          <div class="noti_empty">
+              <h2> <%=@kin.sidoname%></h2>
+              <h2>미세먼지 : <%=@todayDust1%> </h2>
+              <h2>초미세먼지 : <%=@todayDust2%> </h2>
+          </div>
+        </div>
+      
+
+      
+    </div>
+    
   </div>
+  
 </section>
+
+<%= render "footer" %>

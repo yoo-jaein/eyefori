@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181001113956) do
+ActiveRecord::Schema.define(version: 20181117172349) do
 
   create_table "childbuses", force: :cascade do |t|
     t.integer  "child_id"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20181001113956) do
     t.integer  "parent3_id"
     t.string   "boarding"
     t.time     "boardingtime"
+    t.string   "rfid"
   end
 
   create_table "dangers", force: :cascade do |t|
@@ -91,6 +92,14 @@ ActiveRecord::Schema.define(version: 20181001113956) do
     t.string   "sidoname"
     t.string   "sigunname"
     t.integer  "arcode"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "school_zones", force: :cascade do |t|
+    t.string   "spotname"
+    t.float    "x_crd"
+    t.float    "y_crd"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

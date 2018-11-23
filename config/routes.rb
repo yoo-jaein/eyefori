@@ -1,16 +1,27 @@
 Rails.application.routes.draw do
 
+  get 'rfid/board'
+  get 'rfid/index'
+
   devise_for :users
-  root 'children#intro'
+  root 'children#main'
   
   get 'nokogiri/region'
   get 'nokogiri/frequent'
+  get 'nokogiri/school' # school zone data db 넣기
+  get 'nokogiri/initialize_x_y'
+  get 'nokogiri/position'
+  post 'nokogiri/save_position'
+  get 'nokogiri/get_position'
+  get 'nokogiri/distance'
+  get 'nokogiri/danger2' # Danger db 추가 넣기
   get 'roo/danger'
 
   get 'crawling/crawling_view'
  
   # intro
   get '/children/intro'
+  get '/children/main'
   
   # Kakao ChatBot
   get  '/keyboard' => "kakaos#keyboard"
@@ -25,13 +36,13 @@ Rails.application.routes.draw do
   post 'kindergardens/inUpdate' => 'kindergardens#inUpdate'
   get 'kindergardens/ajaxCall'
   get 'kindergardens/getSigun'
-  get 'kindergardens/getAccident'
-  get 'kindergardens/getPub'
+  get 'kindergardens/getAccident/:id' => "kindergardens#getAccident"
+  get 'kindergardens/getPub/:id' => "kindergardens#getPub"
   get 'kindergardens/getSmoke'
-  get 'kindergardens/getSchool'
+  get 'kindergardens/getSchool/:id' => "kindergardens#getSchool"
   get 'kindergardens/infiscroll'
   get 'kindergardens/gotoposi/:id' => 'kindergardens#gotoposi'
-  get 'kindergardens/getKinder'
+  post 'kindergardens/getKinder'
   get 'kindergardens/gotoform/:id' =>'kindergardens#gotoform'
   # Kindergarden Controller - end
   
@@ -50,9 +61,7 @@ Rails.application.routes.draw do
   post 'children/update/:id' => 'children#update'
 
   get 'children/destroy/:id' => 'children#destroy'
-  
-  get 'children/getin/:id' => 'children#getin'
-  get 'children/getout/:id' => 'children#getout'
+
   get 'children/:id/ajax_show' => 'children#ajax_show'
   get 'children/getInfo/:id' => 'children#getInfo'
   # Child CRUD - end

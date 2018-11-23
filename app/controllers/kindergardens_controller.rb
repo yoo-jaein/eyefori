@@ -2,6 +2,7 @@ class KindergardensController < ApplicationController
   
   # 검색하기 ---------------------------------------------------------------------
   def search
+    
     @kindergardens = Kindergarden.where("crname like ?", "%#{params[:input_name]}%")
     @kindergarden_all = Kindergarden.all
      
@@ -118,15 +119,26 @@ class KindergardensController < ApplicationController
   end
   
   def getAccident
-    @acci = Frequent.all
+    @acci = Array.new
+    @kind = Kindergarden.find(params[:id])
+    
+    @kind.each do |k|
+      @acci.push(Frequent.find(k.fre.to_i))
+    end
     
     render json: @rev={ acci: @acci }
   end
   
   def getPub
-    @pub = Danger.all
+    @pub = Array.new
+    @kind = Kindergarden.find(params[:id])
     
-    render json: @rev = { pub: @pub }
+    @kin = @kin.dan
+    @kin.each do |k|
+      @pub.push(Dangers.find(k.to_i))
+    end
+    
+    render json: @rev={ pub: @pub }
   end
   
   def getSmoke
@@ -134,7 +146,14 @@ class KindergardensController < ApplicationController
   end
   
   def getSchool
+    @scz = Array.new
+    @kind = Kindergarden.find(params[:id])
     
+    @kind.each do |k|
+      @scz.push(SchoolZone.find(k.sch.to_i))
+    end
+    
+    render json: @rev={ sz: @scz }
   end
   
   def infiscroll
@@ -161,8 +180,13 @@ class KindergardensController < ApplicationController
   
   def getKinder
     
-    @kinder = Kindergarden.where("sidoname like ? and sigunguname like ? and crname like ?", "%#{params[:sido]}%","%#{params[:sigu]}%","%#{params[:crname]}%")
-    
+    if params[:sido] != "전체" && params[:sigu] != "전체" 
+      @kinder = Kindergarden.where("sidoname like ? and sigunguname like ? and crname like ?", "%#{params[:sido]}%","%#{params[:sigu]}%","%#{params[:crname]}%")
+    elsif params[:sido] != "전체" && params[:sigu] == "전체"
+      @kinder = Kindergarden.where("sidoname like ? and crname like ?","%#{params[:sido]}%","%#{params[:crname]}%")[0..30]
+    else
+      @kinder = Kindergarden.where("crname like ?","%#{params[:crname]}%")[0..30]
+    end
     @rev = {
       "kind" => @kinder
     }
@@ -173,7 +197,10 @@ class KindergardensController < ApplicationController
   def gotoform
     @id = params[:id]
     
+    name = Kindergarden.find(@id).crname
+    
     @rev={
+      name: name,
       id: @id
     }
     

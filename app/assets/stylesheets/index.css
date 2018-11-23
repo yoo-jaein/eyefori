@@ -6,13 +6,19 @@
     margin-left:auto;
     /*border-bottom:1px solid #c7c7c7;*/
     border-radius: 5px;
-    background-color:#ffed4d;
+    /*background-color:#ffed4d;*/
     padding:5px 10px;
     text-align:center;
 }
 
 .index .name i{
     margin-right: 10px;
+}
+
+.index .nametag{
+    width:10px;
+    height:10px;
+    background-color:#FFCF0A;
 }
 
 .index .name h2{
